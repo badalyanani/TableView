@@ -139,15 +139,12 @@ class Downloader {
     }
     
     func download(urlString:String) {
-        //keep downloading urls and check for double or more download
         let documentPath = documentsURL
         let imageName = String(urlString.split(separator: "/").last!.split(separator: ".").first!)
         let imagePath = documentPath.appendingPathComponent(imageName)
         
         var image = UIImage()
         DispatchQueue.global().async {
-            //check in file sytem and create from file (data), otherwise download from url
-            
             if(self.fileManager.fileExists(atPath: imagePath.path)) {
                 image = try! UIImage(data: Data(contentsOf: imagePath))!
                 print("is exists")
@@ -156,8 +153,6 @@ class Downloader {
                 try? data.write(to: imagePath)
                 let image = UIImage(data: data)
             }
-            
-            //Write into file system (documents directory)
             
             DispatchQueue.main.async {
                 
