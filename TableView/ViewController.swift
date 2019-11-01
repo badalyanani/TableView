@@ -56,10 +56,12 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         let object = tableData[indexPath.row]
         let url:String = object["icon_url"]!
         cell.tag = indexPath.row
+        cell.textLabel?.text = ""
         let loader = ImageLoader(url: url) { [weak cell] (image) in
             if let cell = cell, cell.tag == indexPath.row {
                 cell.imageView?.image = image
-                cell.textLabel?.text = object["loc_key"]!            }
+                cell.textLabel?.text = object["loc_key"]!
+            }
         }
         
         cell.setImageLoader(loader: loader)
@@ -83,11 +85,6 @@ class CustomCell: UITableViewCell {
         
         imageLoader = loader
         imageLoader?.load()
-    }
-    
-    override func prepareForReuse() {
-        super.prepareForReuse()
-        self.imageView?.image = nil
     }
 }
 
@@ -116,6 +113,7 @@ class ImageLoader {
         }
         
         let img:UIImage? = info["image"] as? UIImage
+                print(info)
         if let block = self.completionBlock {
             block(img)
         }
@@ -145,6 +143,7 @@ class Downloader {
         
         var image = UIImage()
         DispatchQueue.global().async {
+            
             if(self.fileManager.fileExists(atPath: imagePath.path)) {
                 image = try! UIImage(data: Data(contentsOf: imagePath))!
                 print("is exists")
